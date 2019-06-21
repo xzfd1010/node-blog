@@ -9,16 +9,25 @@ const blogServerHandler = (req, res) => {
     const keyword = req.query.keyword || ''
 
     const result = getList(author, keyword)
-    return new SuccessModel(result)
+    return result.then((listData) => {
+      console.log('listData', listData)
+      return new SuccessModel(listData)
+    })
   }
   if (method === 'GET' && req.path === '/api/blog/detail') {
     const id = req.query.id || ''
     const result = getDetail(id)
-    return new SuccessModel(result)
+    return result.then((data) => {
+      return new SuccessModel(data)
+    })
   }
+
   if (method === 'POST' && req.path === '/api/blog/new') {
-    const data = newBlog(req.body)
-    return new SuccessModel(data)
+    req.body.author = 'Nick' // 测试
+    const result = newBlog(req.body)
+    return result.then(data => {
+      return new SuccessModel(data)
+    })
   }
   if (method === 'POST' && req.path === '/api/blog/update') {
     const id = req.query.id || ''

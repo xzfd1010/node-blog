@@ -34,7 +34,9 @@ const serverHandler = (req, res) => {
     req.body = postData
     const blogResult = blogServerHandler(req, res)
     if (blogResult) {
-      res.end(JSON.stringify(blogResult))
+      blogResult.then((data) => {
+        res.end(JSON.stringify(data))
+      })
       return
     }
 
