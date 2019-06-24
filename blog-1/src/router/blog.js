@@ -32,20 +32,25 @@ const blogServerHandler = (req, res) => {
   if (method === 'POST' && req.path === '/api/blog/update') {
     const id = req.query.id || ''
     const result = updateBlog(id, req.body)
-    if (result) {
-      return new SuccessModel()
-    } else {
-      return new ErrorModel('更新博客失败')
-    }
+    return result.then((updateData) => {
+      if (updateData) {
+        return new SuccessModel()
+      } else {
+        return new ErrorModel('更新博客失败')
+      }
+    })
   }
   if (method === 'POST' && req.path === '/api/blog/del') {
     const id = req.query.id || ''
-    const result = delBlog(id)
-    if (result) {
-      return new SuccessModel()
-    } else {
-      return new ErrorModel('删除博客失败')
-    }
+    const author = 'Nick'
+    const result = delBlog(id, author)
+    return result.then(data => {
+      if (data) {
+        return new SuccessModel()
+      } else {
+        return new ErrorModel('删除博客失败')
+      }
+    })
   }
 }
 

@@ -42,7 +42,9 @@ const serverHandler = (req, res) => {
 
     const userResult = userServerHandler(req, res)
     if (userResult) {
-      res.end(JSON.stringify(userResult))
+      userResult.then(data => {
+        res.end(JSON.stringify(data))
+      })
       return
     }
 
