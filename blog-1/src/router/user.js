@@ -1,10 +1,11 @@
 const {SuccessModel, ErrorModel} = require('../model')
 const {login} = require('../controller/user')
+const {set} = require('../db/redis')
 
 const userServerHandler = (req, res) => {
   const method = req.method
-  if (method === 'GET' && req.path === '/api/user/login') {
-    const {username, password} = req.query
+  if (method === 'POST' && req.path === '/api/user/login') {
+    const {username, password} = req.body
     const result = login(username, password)
     return result.then(data => {
       if (data.username) {
@@ -12,9 +13,9 @@ const userServerHandler = (req, res) => {
         req.session.username = data.username
         req.session.realName = data.realname
 
-        console.log(`username:${req.session.username},realName:${req.session.realName}`)
+        set(req.sessionId, req.session) // 保存到session中
 
-        return new SuccessModel()
+        return new SuccessModel(req.session)
       } else {
         return new ErrorModel('登录失败')
       }
@@ -22,7 +23,6 @@ const userServerHandler = (req, res) => {
   }
 
   if (method === 'GET' && req.path === '/api/user/login-check') {
-    console.log('session', req.session)
     if (req.session.username) {
       return Promise.resolve(
         new SuccessModel({
