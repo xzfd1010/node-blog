@@ -28,7 +28,6 @@ const blogServerHandler = (req, res) => {
 
     const result = getList(author, keyword)
     return result.then((listData) => {
-      console.log('listData', listData)
       return new SuccessModel(listData)
     })
   }

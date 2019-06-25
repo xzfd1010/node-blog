@@ -1,0 +1,24 @@
+const fs = require('fs')
+const path = require('path')
+
+function writeLog (writeStream, log) {
+  writeStream.write(log + '\n')
+}
+
+function createWriteStream (fileName) {
+  const fullFileName = path.resolve(__dirname, '../../log', fileName)
+  const writeStream = fs.createWriteStream(fullFileName, {
+    flags: 'a'
+  })
+  return writeStream
+}
+
+function access (log) {
+  // console.log('log',log)
+  const accessWriteStream = createWriteStream('access.log')
+  writeLog(accessWriteStream, log)
+}
+
+module.exports = {
+  access
+}

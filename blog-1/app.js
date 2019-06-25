@@ -1,6 +1,7 @@
 const blogServerHandler = require('./src/router/blog')
 const userServerHandler = require('./src/router/user')
 const querystring = require('querystring')
+const {access} = require('./src/utils/log')
 const {get, set} = require('./src/db/redis')
 
 // const SESSION_DATA = {}
@@ -13,6 +14,9 @@ const setExpire = () => {
 }
 
 const getPostData = (req) => {
+
+  access(`${req.method} -- ${req.url} -- ${req.headers['user-agent']} -- ${Date.now()}`)
+
   return new Promise((resolve, reject) => {
     // 判断方法
     if (req.method !== 'POST') {
