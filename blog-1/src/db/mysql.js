@@ -22,4 +22,7 @@ function exec (sql) {
 // 不要关闭连接，因为这个实例给所有人用
 // con.end()
 
-module.exports = {exec}
+module.exports = {
+  exec,
+  escape: mysql.escape
+}
