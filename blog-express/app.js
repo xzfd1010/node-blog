@@ -5,6 +5,9 @@ const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const session = require('express-session')
+const RedisStore = require('connect-redis')(session)
+const redisClient = require('./db/redis')
+const fs = require('fs')
 
 // const index = require('./routes/index')
 // const users = require('./routes/users')
@@ -16,15 +19,31 @@ const app = express()
 
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'))
-// app.set('view engine', 'jade')
+app.set('view engine', 'jade')
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'))
+const env = process.env.NODE_ENV
+if (env === 'dev') {
+  app.use(logger('dev'))
+} else {
+  const fileName = path.resolve(__dirname, 'log', 'access.log')
+  const writeStream = fs.createWriteStream(fileName, {
+    flags: 'a'
+  })
+  app.use(logger('combined', {
+    stream: writeStream
+  }))
+}
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 // app.use(express.static(path.join(__dirname, 'public')))
+
+// 创建存储session的redis
+const sessionStore = new RedisStore({
+  client: redisClient
+})
 app.use(session({
   secret: 'a new key',
   cookie: {
@@ -34,6 +53,7 @@ app.use(session({
   },
   resave: false,
   saveUninitialized: false,
+  store: sessionStore // 存储到redis中
 }))
 
 // app.use('/', index)

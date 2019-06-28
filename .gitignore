@@ -142,11 +142,10 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-node_modules/
-*/node_modules
-.idea
-*/.idea
+**/node_modules
+**/.idea
 
-*.rdb
-*/dump.rdb
+**/dump.rdb
+
+express-test
 

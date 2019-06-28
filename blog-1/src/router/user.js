@@ -23,6 +23,7 @@ const userServerHandler = (req, res) => {
   }
 
   if (method === 'GET' && req.path === '/api/user/login-check') {
+    // 这里的作用是用来模拟，需要检测登录的接口，可以通过req.session.username是否存在判断用户是否登录
     if (req.session.username) {
       return Promise.resolve(
         new SuccessModel({

@@ -96,7 +96,7 @@ const serverHandler = (req, res) => {
     const blogResult = blogServerHandler(req, res)
     if (blogResult) {
 
-      // 将userId写入cookie
+      // 只要有请求发过来，并且此时cookie中没有userId，就将userId写入cookie；之后同一个浏览器再发过来就认为是同一个用户了
       if (needSetCookie) {
         res.setHeader('Set-Cookie', `userId=${userId};path=/;httpOnly;expires=${setExpire()}`)
       }
