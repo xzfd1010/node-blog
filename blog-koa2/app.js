@@ -7,17 +7,34 @@ const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const session = require('koa-generic-session')
 const redisStore = require('koa-redis')
-const { REDIS_CONF } = require('./conf/db')
+const fs = require('fs')
+const path = require('path')
+const morgan = require('koa-morgan')
 
 const index = require('./routes/index')
 const users = require('./routes/users')
 const blog = require('./routes/blog')
 const user = require('./routes/user')
 
+const { REDIS_CONF } = require('./conf/db')
+
 // error handler
 onerror(app)
 
 // middlewares
+const env = process.env.NODE_ENV
+if (env === 'dev') {
+  app.use(morgan('dev'))
+} else {
+  const fileName = path.resolve(__dirname, 'logs', 'access.log')
+  const writeStream = fs.createWriteStream(fileName, {
+    flags: 'a'
+  })
+  app.use(morgan('combined', {
+    stream: writeStream
+  }))
+}
+
 app.use(bodyparser({
   enableTypes: ['json', 'form', 'text']
 }))
