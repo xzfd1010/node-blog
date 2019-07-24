@@ -7,10 +7,9 @@ function writeLog (writeStream, log) {
 
 function createWriteStream (fileName) {
   const fullFileName = path.resolve(__dirname, '../../log', fileName)
-  const writeStream = fs.createWriteStream(fullFileName, {
+  return fs.createWriteStream(fullFileName, {
     flags: 'a'
   })
-  return writeStream
 }
 
 function access (log) {
